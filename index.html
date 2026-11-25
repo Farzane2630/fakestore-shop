@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop App</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Shop</h1>
+      <nav aria-label="Cart">
+        <span>Cart: <span id="cart-count">0</span> items</span>
+      </nav>
+    </header>
+    <main>
+      <section aria-labelledby="controls-heading">
+        <h2 id="controls-heading" class="visually-hidden">Filters</h2>
+        <!-- search, category, and sort controls go here -->
+      </section>
+
+      <section aria-labelledby="products-heading">
+        <h2 id="products-heading" class="visually-hidden">Products</h2>
+        <p id="status" role="status"></p>
+        <div id="product-grid"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Data from Fake Store API</p>
+    </footer>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
