@@ -8,6 +8,15 @@ const sortSelect = document.getElementById("sort");
 
 let allProducts = [];
 
+// Product Detail Modal
+const modal = document.getElementById("product-modal");
+const modalClose = document.getElementById("modal-close");
+const modalImage = document.getElementById("modal-image");
+const modalTitle = document.getElementById("modal-title");
+const modalCategory = document.getElementById("modal-category");
+const modalPrice = document.getElementById("modal-price");
+const modalDescription = document.getElementById("modal-description");
+
 async function fetchProducts() {
   statusEl.textContent = "Loading products...";
 
@@ -20,13 +29,6 @@ async function fetchProducts() {
 
     const products = await response.json();
     statusEl.textContent = "";
-
-    products.forEach((product) => {
-      const item = document.createElement("li");
-      item.textContent = product.title;
-      list.appendChild(item);
-    });
-
     return products;
   } catch (error) {
     console.error(error);
@@ -52,7 +54,13 @@ function render(products) {
 
   products.forEach((product) => {
     const item = document.createElement("li");
-    item.textContent = `${product.title} - $${product.price}`;
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.dataset.id = product.id;
+    button.textContent = `${product.title} - $${product.price}`;
+
+    item.appendChild(button);
     list.appendChild(item);
   });
 }
@@ -76,6 +84,17 @@ function applyFilters() {
   render(result);
 }
 
+function openModal(product) {
+  modalImage.src = product.image;
+  modalImage.alt = product.title;
+  modalTitle.textContent = product.title;
+  modalCategory.textContent = product.category;
+  modalPrice.textContent = `$${product.price}`;
+  modalDescription.textContent = product.description;
+
+  modal.showModal();
+}
+
 async function init() {
   allProducts = await fetchProducts();
   populateCategories(allProducts);
@@ -85,5 +104,19 @@ async function init() {
 searchInput.addEventListener("input", applyFilters);
 categorySelect.addEventListener("change", applyFilters);
 sortSelect.addEventListener("change", applyFilters);
+
+list.addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
+
+  const product = allProducts.find((p) => p.id === Number(button.dataset.id));
+  if (product) openModal(product);
+});
+
+modalClose.addEventListener("click", () => modal.close());
+
+modal.addEventListener("click", (event) => {
+  if (event.target === modal) modal.close();
+});
 
 init();
