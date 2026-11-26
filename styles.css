@@ -203,6 +203,7 @@ main {
 /* Clamp long titles to two lines, so cards stay even */
 .card-title {
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -267,13 +268,10 @@ footer {
 }
 
 #modal-image {
-  display: block;
-  width: 100%;
-  height: 220px;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
-  padding: 0.5rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.6);
+  transition: opacity 0.3s ease;
 }
 
 #modal-title {
@@ -335,5 +333,78 @@ footer {
 
   #product-grid li button:hover {
     transform: none;
+  }
+}
+
+/* Skeleton shimmer while the product image loads */
+.card-image.is-loading {
+  background: linear-gradient(
+    90deg,
+    rgba(211, 211, 211, 0.568) 25%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(224, 224, 224, 0.6) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.card-image img {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.card-image.is-loading img {
+  opacity: 0;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-image.is-loading {
+    animation: none;
+  }
+}
+.modal-image-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 220px;
+  padding: 0.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.modal-image-frame.is-loading {
+  background: linear-gradient(
+    90deg,
+    rgba(221, 221, 221, 0.6) 25%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(218, 218, 218, 0.6) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+#modal-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: opacity 0.3s ease;
+}
+
+.modal-image-frame.is-loading #modal-image {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-image-frame.is-loading {
+    animation: none;
   }
 }

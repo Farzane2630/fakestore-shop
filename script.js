@@ -12,6 +12,7 @@ let allProducts = [];
 const modal = document.getElementById("product-modal");
 const modalClose = document.getElementById("modal-close");
 const modalImage = document.getElementById("modal-image");
+const modalImageFrame = document.getElementById("modal-image-frame");
 const modalTitle = document.getElementById("modal-title");
 const modalCategory = document.getElementById("modal-category");
 const modalPrice = document.getElementById("modal-price");
@@ -67,11 +68,18 @@ function render(products) {
     button.dataset.id = product.id;
 
     const imageFrame = document.createElement("div");
-    imageFrame.className = "card-image";
+    imageFrame.className = "card-image is-loading";
+
     const img = document.createElement("img");
-    img.src = product.image;
     img.alt = "";
     img.loading = "lazy";
+    img.addEventListener("load", () =>
+      imageFrame.classList.remove("is-loading"),
+    );
+    img.addEventListener("error", () =>
+      imageFrame.classList.remove("is-loading"),
+    );
+    img.src = product.image;
     imageFrame.appendChild(img);
 
     const title = document.createElement("span");
@@ -110,8 +118,10 @@ function applyFilters() {
 function openModal(product) {
   currentProduct = product;
 
-  modalImage.src = product.image;
+  modalImageFrame.classList.add("is-loading");
   modalImage.alt = product.title;
+  modalImage.src = product.image;
+
   modalTitle.textContent = product.title;
   modalCategory.textContent = product.category;
   modalPrice.textContent = `$${product.price}`;
@@ -119,24 +129,6 @@ function openModal(product) {
 
   modal.showModal();
 }
-
-async function init() {
-  allProducts = await fetchProducts();
-  populateCategories(allProducts);
-  applyFilters();
-}
-
-searchInput.addEventListener("input", applyFilters);
-categorySelect.addEventListener("change", applyFilters);
-sortSelect.addEventListener("change", applyFilters);
-
-list.addEventListener("click", (event) => {
-  const button = event.target.closest("button");
-  if (!button) return;
-
-  const product = allProducts.find((p) => p.id === Number(button.dataset.id));
-  if (product) openModal(product);
-});
 
 modalClose.addEventListener("click", () => modal.close());
 
@@ -173,5 +165,30 @@ function updateCartSummary() {
 addToCartBtn.addEventListener("click", () => {
   if (currentProduct) addToCart(currentProduct);
 });
+
+async function init() {
+  allProducts = await fetchProducts();
+  populateCategories(allProducts);
+  applyFilters();
+}
+
+searchInput.addEventListener("input", applyFilters);
+categorySelect.addEventListener("change", applyFilters);
+sortSelect.addEventListener("change", applyFilters);
+
+list.addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
+
+  const product = allProducts.find((p) => p.id === Number(button.dataset.id));
+  if (product) openModal(product);
+});
+
+modalImage.addEventListener("load", () =>
+  modalImageFrame.classList.remove("is-loading"),
+);
+modalImage.addEventListener("error", () =>
+  modalImageFrame.classList.remove("is-loading"),
+);
 
 init();
