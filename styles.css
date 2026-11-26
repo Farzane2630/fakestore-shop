@@ -1,17 +1,339 @@
-#product-modal {
-  max-width: 500px;
-  width: 90%;
-  border: none;
-  border-radius: 8px;
-  padding: 0;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-#product-modal img {
+body {
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  color: #1f2937;
+  background: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 50%, #d1fae5 100%);
+  background-attachment: fixed;
+  line-height: 1.5;
+}
+
+/* Soft colored light behind the glass, so the blur has something to show */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(129, 140, 248, 0.45),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 85% 30%,
+      rgba(244, 114, 182, 0.35),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 50% 90%,
+      rgba(52, 211, 153, 0.35),
+      transparent 45%
+    );
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Glass surfaces */
+header,
+.controls,
+#product-grid li button,
+#product-modal {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  header,
+  .controls,
+  #product-grid li button,
+  #product-modal {
+    background: rgba(255, 255, 255, 0.92);
+  }
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0 0 20px 20px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+header nav span {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Filters panel */
+.controls {
+  display: flex;
+
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 20px;
+}
+
+.controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.controls input,
+.controls select {
+  min-width: 160px;
+  padding: 0.55rem 0.75rem;
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+#status {
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Product grid: CSS Grid with auto-fit, as the brief asks */
+#product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#product-grid li {
+  display: flex;
+}
+
+#product-grid li button {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  border-radius: 18px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#product-grid li button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(31, 38, 135, 0.2);
+}
+
+/* Fixed frame: every image gets the same space, regardless of its shape */
+.card-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 180px;
+  padding: 0.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.card-image img {
   max-width: 100%;
-  height: 200px;
+  max-height: 100%;
   object-fit: contain;
 }
 
+/* Clamp long titles to two lines, so cards stay even */
+.card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.card-price {
+  margin-top: auto;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #4f46e5;
+}
+
+/* Focus ring for keyboard users */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+footer {
+  padding: 1rem 1.5rem;
+  font-size: 0.85rem;
+  text-align: center;
+  color: #4b5563;
+}
+
+/* Modal */
+#product-modal {
+  width: 90%;
+  max-width: 520px;
+  padding: 0;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #1f2937;
+}
+
+#product-modal::backdrop {
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(4px);
+}
+
 .modal-content {
+  position: relative;
   padding: 1.5rem;
+}
+
+#modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#modal-image {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  padding: 0.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+#modal-title {
+  margin: 1rem 0 0.25rem;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+#modal-category {
+  margin: 0;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+  color: #4b5563;
+}
+
+#modal-price {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #4f46e5;
+}
+
+#modal-description {
+  margin: 0;
+  color: #374151;
+}
+
+#add-to-cart {
+  margin-top: 1.25rem;
+  padding: 0.75rem 1.25rem;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+}
+
+#add-to-cart:hover {
+  filter: brightness(1.08);
+}
+
+@media (max-width: 600px) {
+  main {
+    padding: 1rem;
+  }
+
+  .card-image {
+    height: 150px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #product-grid li button {
+    transition: none;
+  }
+
+  #product-grid li button:hover {
+    transform: none;
+  }
 }

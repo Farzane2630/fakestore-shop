@@ -63,11 +63,26 @@ function render(products) {
   products.forEach((product) => {
     const item = document.createElement("li");
     const button = document.createElement("button");
-
     button.type = "button";
     button.dataset.id = product.id;
-    button.textContent = `${product.title} - $${product.price}`;
 
+    const imageFrame = document.createElement("div");
+    imageFrame.className = "card-image";
+    const img = document.createElement("img");
+    img.src = product.image;
+    img.alt = "";
+    img.loading = "lazy";
+    imageFrame.appendChild(img);
+
+    const title = document.createElement("span");
+    title.className = "card-title";
+    title.textContent = product.title;
+
+    const price = document.createElement("span");
+    price.className = "card-price";
+    price.textContent = `$${product.price}`;
+
+    button.append(imageFrame, title, price);
     item.appendChild(button);
     list.appendChild(item);
   });
