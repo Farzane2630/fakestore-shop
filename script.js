@@ -17,6 +17,14 @@ const modalCategory = document.getElementById("modal-category");
 const modalPrice = document.getElementById("modal-price");
 const modalDescription = document.getElementById("modal-description");
 
+// Add To Cart
+const addToCartBtn = document.getElementById("add-to-cart");
+const cartCountEl = document.getElementById("cart-count");
+const cartTotalEl = document.getElementById("cart-total");
+// productId -> { product, quantity }. The cart lives in memory, separate from the DOM.
+const cart = new Map();
+let currentProduct = null;
+
 async function fetchProducts() {
   statusEl.textContent = "Loading products...";
 
@@ -85,6 +93,8 @@ function applyFilters() {
 }
 
 function openModal(product) {
+  currentProduct = product;
+
   modalImage.src = product.image;
   modalImage.alt = product.title;
   modalTitle.textContent = product.title;
@@ -117,6 +127,36 @@ modalClose.addEventListener("click", () => modal.close());
 
 modal.addEventListener("click", (event) => {
   if (event.target === modal) modal.close();
+});
+
+// CART
+function addToCart(product) {
+  const entry = cart.get(product.id);
+
+  if (entry) {
+    entry.quantity += 1;
+  } else {
+    cart.set(product.id, { product, quantity: 1 });
+  }
+
+  updateCartSummary();
+}
+
+function updateCartSummary() {
+  let count = 0;
+  let total = 0;
+
+  for (const { product, quantity } of cart.values()) {
+    count += quantity;
+    total += product.price * quantity;
+  }
+
+  cartCountEl.textContent = count;
+  cartTotalEl.textContent = total.toFixed(2);
+}
+
+addToCartBtn.addEventListener("click", () => {
+  if (currentProduct) addToCart(currentProduct);
 });
 
 init();
