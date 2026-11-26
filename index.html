@@ -16,7 +16,21 @@
     <main>
       <section aria-labelledby="controls-heading">
         <h2 id="controls-heading" class="visually-hidden">Filters</h2>
-        <!-- search, category, and sort controls go here -->
+
+        <label for="search">Search products</label>
+        <input type="search" id="search" placeholder="Search by title" />
+
+        <label for="category">Category</label>
+        <select id="category">
+          <option value="all">All categories</option>
+        </select>
+
+        <label for="sort">Sort by price</label>
+        <select id="sort">
+          <option value="default">Default</option>
+          <option value="price-asc">Price: low to high</option>
+          <option value="price-desc">Price: high to low</option>
+        </select>
       </section>
 
       <section aria-labelledby="products-heading">
