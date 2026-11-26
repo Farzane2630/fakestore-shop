@@ -2,7 +2,9 @@
 
 A single-page e-commerce front end built with vanilla JavaScript, using data from the Fake Store API.
 
-**Live demo:** https://Farzane2630.github.io/shop-app/
+**Live demo:** https://Farzane2630.github.io/fakestore-shop/
+
+<img width="1324" height="1929" alt="shop-app" src="https://github.com/user-attachments/assets/391f3cf3-73ae-45bf-b37e-cea15abf6f89" />
 
 ## Features
 
