@@ -41,7 +41,7 @@ No build step. Open `index.html` in a browser, or use VS Code's Live Server.
 
 یک اپلیکیشن فروشگاهی تک‌صفحه‌ای با **Vanilla JavaScript** و داده از **Fake Store API**.
 
-**نسخه‌ی زنده:** https://YOUR_USERNAME.github.io/shop-app/
+**نسخه‌ی ایو:** https://farzane2630.github.io/fakestore-shop/
 
 ## امکانات
 - دریافت لیست محصولات از API همراه با نمایش وضعیت Loading و پیام خطای قابل‌فهم
